@@ -1,0 +1,10 @@
+{% if (com.get('level') == 0) %}
+{{ '%s' | format( '+' * 60) }}
+{% endif %}
+{{ '%s (%s) from %s at %s:' | format( ' ' * com.get('level'),
+                                            cid,
+                                            com.get('who'),
+                                            com.get('when'))
+                                            }}
+{{ '%s %s' | format(' ' * com.get('level'), com.get('comment')) }}
+{% if true %} {% endif %}

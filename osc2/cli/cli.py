@@ -180,6 +180,7 @@ def import_ui():
     import osc2.cli.commit.ui
     import osc2.cli.status.ui
     import osc2.cli.add.ui
+    import osc2.cli.comment.ui
 
 
 def call(func):

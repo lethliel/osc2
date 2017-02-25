@@ -9,6 +9,7 @@ from test import test_oscargs
 from test import test_builder
 from test import test_fetch
 from test import test_search
+from test import test_comments
 from test.wc import test_util
 from test.wc import test_project
 from test.wc import test_package
@@ -41,6 +42,7 @@ def additional_tests():
     suite.addTests(test_io.suite())
     suite.addTests(test_delegation.suite())
     suite.addTests(test_shell.suite())
+    suite.addTests(test_comments.suite())
     return suite
 
 if __name__ == '__main__':

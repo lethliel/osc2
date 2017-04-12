@@ -122,13 +122,13 @@ class RequestCommentCreate(CreateOptions, CommandDescription, CommentCreate):
     func = call(CommentController.request_comment)
 
 
-class RequestCommentDelete(CommandDescription, Comment):
-    """Delete comment.
+class CommentDelete(CommandDescription, Comment):
+    """Delete a comment.
 
-    Deletes comment with the given comment id.
+    Deletes the comment with the given comment id.
 
     Example:
-    osc2 comment delete api://comment
+    osc2 comment delete api://comment_id
 
     """
     cmd = 'delete'

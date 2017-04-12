@@ -1,6 +1,5 @@
 """Provides controller functions for the "comment" command."""
 
-import logging
 import collections
 
 from osc2.httprequest import HTTPError
@@ -15,13 +14,10 @@ SHELL_TEMPLATE = 'comment/comment_shell.jinja2'
 CREATE_TEMPLATE = 'comment/comment_create.jinja2'
 
 
-def logger():
-    """Returns a logging.Logger object."""
-    return logging.getLogger(__name__)
-
-
 class CommentController(object):
-    """ Main class for the comment handling. Includes
+    """Comment Controller
+
+    Main class for the comment handling. Includes
     methods for package, project and request comments
 
     """
@@ -31,15 +27,16 @@ class CommentController(object):
                         comment=None, parent=None):
         """Method for package command handling"""
         global LIST_TEMPLATE
+        global CREATE_TEMPLATE
         query = {'apiurl': info.apiurl}
         pkg_comment_ctrl = PackageComment(project, package)
         result = getattr(pkg_comment_ctrl, method)(comment, parent, **query)
         if method == 'list':
-            formated_comments = _format_for_output(result)
+            formatted_comments = _format_for_output(result)
             if info.interactive:
-                cls.shell(renderer, info.shell_cls, formated_comments,
+                cls.shell(renderer, info.shell_cls, formatted_comments,
                           pkg_comment_ctrl, info)
-            renderer.render(LIST_TEMPLATE, comments=formated_comments)
+            renderer.render(LIST_TEMPLATE, comments=formatted_comments)
         else:
             renderer.render(CREATE_TEMPLATE, status=result)
 
@@ -48,15 +45,16 @@ class CommentController(object):
                         parent=None):
         """Method for project command handling"""
         global LIST_TEMPLATE
+        global CREATE_TEMPLATE
         query = {'apiurl': info.apiurl}
         proj_comment_ctrl = ProjectComment(project)
         result = getattr(proj_comment_ctrl, method)(comment, parent,  **query)
         if method == 'list':
-            formated_comments = _format_for_output(result)
+            formatted_comments = _format_for_output(result)
             if info.interactive:
-                cls.shell(renderer, info.shell_cls, formated_comments,
+                cls.shell(renderer, info.shell_cls, formatted_comments,
                           proj_comment_ctrl, info)
-            renderer.render(LIST_TEMPLATE, comments=formated_comments)
+            renderer.render(LIST_TEMPLATE, comments=formatted_comments)
         else:
             renderer.render(CREATE_TEMPLATE, status=result)
 
@@ -65,21 +63,23 @@ class CommentController(object):
                         parent=None):
         """Method for request command handling"""
         global LIST_TEMPLATE
+        global CREATE_TEMPLATE
         query = {'apiurl': info.apiurl}
         req_comment_ctrl = RequestComment(request)
         result = getattr(req_comment_ctrl, method)(comment, parent, **query)
         if method == 'list':
-            formated_comments = _format_for_output(result)
+            formatted_comments = _format_for_output(result)
             if info.interactive:
-                cls.shell(renderer, info.shell_cls, formated_comments,
+                cls.shell(renderer, info.shell_cls, formatted_comments,
                           req_comment_ctrl, info)
-            renderer.render(LIST_TEMPLATE, comments=formated_comments)
+            renderer.render(LIST_TEMPLATE, comments=formatted_comments)
         else:
             renderer.render(CREATE_TEMPLATE, status=result)
 
     @classmethod
     def delete_comment(cls, renderer, comment_id, info):
         """Method for comment deletion"""
+        global CREATE_TEMPLATE
         query = {'apiurl': info.apiurl}
         del_comment_ctrl = DeleteComment(comment_id)
         result = del_comment_ctrl.delete(comment_id, **query)
@@ -167,7 +167,7 @@ class CommentShellController(CommentController):
             print result
 
     def delete(self, shell, cid, info):
-        """Delete comment"""
+        """Delete a comment"""
         query = {'apiurl': info.apiurl}
         cmt_controller = info.cmt_controller
         results = cmt_controller.delete(cid, **query)
@@ -192,8 +192,7 @@ def _format_for_output(result):
         f_comments[comment.get('id')] = {'who': comment.get('who'),
                                          'when': comment.get('when'),
                                          'comment': comment,
-                                         'level': level
-                                         }
+                                         'level': level}
         for child in children:
             comments[:0] = [(child, level + 1)]
     return f_comments

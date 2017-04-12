@@ -2,7 +2,6 @@
 
 from osc2.core import Osc
 from osc2.util.xml import OscElement, fromstring
-from lxml import etree
 
 
 class CommentsElement(OscElement):
